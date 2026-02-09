@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>真实考古遗址交互地图</title>
+<style>
+body {
+  font-family: sans-serif;
+  background:#111;
+  color:#eee;
+  text-align:center;
+}
+#mapContainer {
+  position: relative;
+  max-width: 400px;
+  margin: auto;
+}
+#siteMap {
+  width: 100%;
+  border:2px solid #444;
+}
+.house {
+  position:absolute;
+  width:18px;
+  height:18px;
+  background:red;
+  border-radius:50%;
+  border:2px solid white;
+  cursor:pointer;
+}
+#popup {
+  position:fixed;
+  bottom:10px;
+  left:10px;
+  right:10px;
+  background:#222;
+  border:1px solid #555;
+  padding:10px;
+  border-radius:8px;
+  display:none;
+}
+button {
+  padding:8px;
+  background:#4caf50;
+  border:none;
+  color:white;
+  border-radius:6px;
+}
+</style>
+</head>
+
+<body>
+<h2>🏛️ 新石器时代遗址交互地图</h2>
+
+<div id="mapContainer">
+  <!-- 替换为你的考古遗址平面图 -->
+  <img id="siteMap" src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Archaeological_site_plan.svg/800px-Archaeological_site_plan.svg.png">
+</div>
+
+<div id="popup">
+  <div id="popupContent"></div>
+  <button onclick="closePopup()">关闭</button>
+</div>
+
+<script>
+// 房址考古数据（你可替换为真实遗址数据）
+let houses = [
+  {
+    id: "F1",
+    x: 30, y: 40,
+    area: "25㎡",
+    finds: "陶片、石斧、炭屑",
+    interpretation: "可能为普通居住房址，靠近炉址区"
+  },
+  {
+    id: "F2",
+    x: 60, y: 55,
+    area: "40㎡",
+    finds: "彩陶、骨器、贝饰",
+    interpretation: "高等级家庭房址，可能存在社会分化"
+  },
+  {
+    id: "F3",
+    x: 45, y: 20,
+    area: "18㎡",
+    finds: "灰坑、动物骨骼",
+    interpretation: "与生产活动相关的小型居住单元"
+  }
+];
+
+// 在地图上生成房址点
+let container = document.getElementById("mapContainer");
+
+houses.forEach(h=>{
+  let d=document.createElement("div");
+  d.className="house";
+  d.style.left=h.x+"%";
+  d.style.top=h.y+"%";
+  d.onclick=()=>showPopup(h);
+  container.appendChild(d);
+});
+
+function showPopup(h){
+  let html = `
+  <b>房址编号：</b>${h.id}<br>
+  <b>面积：</b>${h.area}<br>
+  <b>出土遗物：</b>${h.finds}<br>
+  <b>考古解释：</b>${h.interpretation}
+  `;
+  document.getElementById("popupContent").innerHTML = html;
+  document.getElementById("popup").style.display="block";
+}
+
+function closePopup(){
+  document.getElementById("popup").style.display="none";
+}
+</script>
+
+</body>
+</html>
