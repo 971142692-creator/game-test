@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>大窑直立人世界 · 开场动画</title>
+<style>
+body {
+  margin:0;
+  background:black;
+  color:white;
+  font-family: monospace;
+  overflow:hidden;
+}
+
+#screen {
+  width:100vw;
+  height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  text-align:center;
+}
+
+.pixel {
+  image-rendering: pixelated;
+}
+
+#spirit {
+  font-size:100px;
+  display:none;
+}
+
+#dialog {
+  border:2px solid white;
+  padding:12px;
+  max-width:80%;
+  background:black;
+  margin-top:20px;
+  font-size:18px;
+}
+
+.optionBox {
+  margin-top:20px;
+  display:none;
+}
+
+.optionBtn {
+  padding:10px 20px;
+  margin:8px;
+  background:black;
+  border:2px solid white;
+  color:white;
+  font-size:18px;
+  cursor:pointer;
+}
+
+.optionBtn:hover {
+  background:white;
+  color:black;
+}
+
+.fade {
+  animation: fadeout 2s forwards;
+}
+
+@keyframes fadeout {
+  to { opacity:0; }
+}
+</style>
+</head>
+
+<body>
+<div id="screen">
+  <div id="spirit" class="pixel">🗿</div>
+  <div id="character" class="pixel" style="font-size:90px; display:none;"></div>
+  <div id="dialog"></div>
+
+  <div class="optionBox" id="options">
+    <button class="optionBtn" onclick="choose('human')">👤 人</button>
+    <button class="optionBtn" onclick="choose('animal')">🦌 动物</button>
+    <button class="optionBtn" onclick="choose('plant')">🌳 植物</button>
+  </div>
+</div>
+
+<script>
+// ====== 简单像素风“语音”音效 ======
+function speak() {
+  const ctx = new AudioContext();
+  const osc = ctx.createOscillator();
+  osc.type = "square";
+  osc.frequency.value = 300;
+  osc.connect(ctx.destination);
+  osc.start();
+  setTimeout(()=>osc.stop(), 200);
+}
+
+// 打字机效果
+function typeText(text, el, callback){
+  el.innerHTML="";
+  let i=0;
+  let timer=setInterval(()=>{
+    el.innerHTML += text[i];
+    speak();
+    i++;
+    if(i>=text.length){
+      clearInterval(timer);
+      if(callback) callback();
+    }
+  }, 50);
+}
+
+// ====== 第一幕 ======
+function scene1(){
+  document.getElementById("spirit").style.display="block";
+  const dialog=document.getElementById("dialog");
+  typeText("欢迎来到大窑直立人世界", dialog, scene2);
+}
+
+// ====== 第二幕 ======
+function scene2(){
+  setTimeout(()=>{
+    typeText("选择你的角色", document.getElementById("dialog"), ()=>{
+      document.getElementById("options").style.display="block";
+    });
+  }, 1000);
+}
+
+// ====== 第三幕 ======
+function choose(type){
+  document.getElementById("options").style.display="none";
+  document.getElementById("spirit").style.display="none";
+
+  let char=document.getElementById("character");
+  char.style.display="block";
+
+  if(type=="human") char.innerHTML="🧑";
+  if(type=="animal") char.innerHTML="🐘";
+  if(type=="plant") char.innerHTML="🌿";
+
+  typeText("探索开始", document.getElementById("dialog"), ()=>{
+    setTimeout(()=>endScene(), 1500);
+  });
+}
+
+// 黑屏结束
+function endScene(){
+  document.getElementById("screen").classList.add("fade");
+  setTimeout(()=>document.body.style.background="black",2000);
+}
+
+// 启动
+setTimeout(scene1, 1000);
+</script>
+</body>
+</html>
